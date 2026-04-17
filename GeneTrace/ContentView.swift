@@ -89,18 +89,18 @@ struct ContentView: View{
             }
             
             if showresult{
-                Text(sequence.isEmpty ? "No DNA Sequence Entered": "DNA Sequence: \(sequence)")
+                Text(sequence.isEmpty ? "No DNA Sequence Entered": "DNA Sequence: \(sequence.uppercased())")
             }
             
             if showlength{
-                let sequence1 = sequence
+                let sequence1 = sequence.uppercased()
                let sequence_length =  sequence1.count
                Text("The length of your DNA strand is: \(sequence_length)")
                 
             }
             
             if showreverse{
-                let sequence2 = sequence
+                let sequence2 = sequence.uppercased()
                 let sequence_reversed = String(sequence2.reversed())
                 Text("Your DNA strand reversed is: \(sequence_reversed)")
             }
@@ -120,7 +120,7 @@ struct ContentView: View{
             }
             
             if showslice{
-                let sequence3 = sequence
+                let sequence3 = sequence.uppercased()
                 let start = sequence3.prefix(3)
                 let end = sequence3.suffix(3)
                 let mid = sequence3.count/2
