@@ -7,6 +7,7 @@ struct ContentView: View{
     @State private var showlength: Bool = false
     @State private var showreverse: Bool = false
     @State private var showcount: Bool = false
+    @State private var showslice: Bool = false
     
     var body: some View{
         VStack{
@@ -20,6 +21,7 @@ struct ContentView: View{
                      showlength = false
                      showreverse = false
                      showcount = true
+                    showslice = false
                     
                 }
                 .foregroundColor(Color.purple)
@@ -29,15 +31,26 @@ struct ContentView: View{
                     showlength = false
                     showreverse = false
                     showcount = false
+                    showslice = false
                 }
                 .foregroundColor(Color.blue)
                 .cornerRadius(10)
+                
+                Button("Slicing"){
+                    showslice = true
+                    showresult = false
+                     showlength = false
+                     showreverse = false
+                     showcount = false
+                }
+                .foregroundColor(Color.mint)
                 
                 Button("Reversed DNA"){
                     showreverse = true
                     showlength = false
                     showresult = false
                     showcount = false
+                    showslice = false
                 }
                 .foregroundColor(Color.green)
                 
@@ -46,6 +59,7 @@ struct ContentView: View{
                     showresult = false
                     showreverse = false
                     showcount = false
+                    showslice = false
                 }
                 .foregroundColor(Color.yellow)
                 
@@ -54,6 +68,7 @@ struct ContentView: View{
                     showresult = true
                     showreverse = true
                     showcount = true
+                    showslice = true
                     
                 }
                 .foregroundColor(Color.orange)
@@ -65,6 +80,7 @@ struct ContentView: View{
                     showlength = false
                     showreverse = false
                     showcount = false
+                    showslice = false
                     
                 }
                 .foregroundColor(Color.red)
@@ -101,6 +117,24 @@ struct ContentView: View{
                 Text("T: \(countT)")
                 Text("C: \(countC)")
                 Text("G: \(countG)")
+            }
+            
+            if showslice{
+                let sequence3 = sequence
+                let start = sequence3.prefix(3)
+                let end = sequence3.suffix(3)
+                let mid = sequence3.count/2
+                let startindex = sequence3.index(sequence3.startIndex, offsetBy: mid - 1 )
+                let endindex = sequence3.index(startindex, offsetBy: 2)
+                let middle = sequence3[startindex...endindex]
+                let seven = sequence3.index(sequence3.startIndex, offsetBy: 6)
+                let eleven = sequence3.index(seven, offsetBy: 4)
+                let seveneleven = sequence3[seven...eleven]
+                
+                Text("7th base to 11th base: \(seveneleven)")
+                Text("Beginning 3: \(start)")
+                Text("Middle 3: \(middle)")
+                Text("End 3: \(end)")
             }
         }
         }
