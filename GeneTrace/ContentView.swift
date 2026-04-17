@@ -1,80 +1,111 @@
-//
-//  ContentView.swift
-//  GeneTrace
-//
-//  Created by Minnamma on 3/31/26.
-//
-
 import SwiftUI
-import SwiftData
 
-struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
 
-    var body: some View {
-        NavigationViewWrapper {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
+struct ContentView: View{
+    @State private var sequence: String = ""
+    @State private var showresult: Bool = false
+    @State private var showlength: Bool = false
+    @State private var showreverse: Bool = false
+    @State private var showcount: Bool = false
+    
+    var body: some View{
+        VStack{
+            TextField("Enter the DNA Sequence:", text: $sequence)
+                .padding()
+            
+            HStack{
+   
+                Button("Nucleuotides A/T/G/C Counts"){
+                    showresult = false
+                     showlength = false
+                     showreverse = false
+                     showcount = true
+                    
                 }
-                .onDelete(perform: deleteItems)
-            }
-#if os(macOS)
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-#endif
-            .toolbar {
-#if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+                .foregroundColor(Color.purple)
+                
+                Button("View sequence"){
+                   showresult = true
+                    showlength = false
+                    showreverse = false
+                    showcount = false
                 }
-#endif
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
+                .foregroundColor(Color.blue)
+                .cornerRadius(10)
+                
+                Button("Reversed DNA"){
+                    showreverse = true
+                    showlength = false
+                    showresult = false
+                    showcount = false
                 }
+                .foregroundColor(Color.green)
+                
+                Button("DNA Length"){
+                    showlength = true
+                    showresult = false
+                    showreverse = false
+                    showcount = false
+                }
+                .foregroundColor(Color.yellow)
+                
+                Button("Show All"){
+                    showlength = true
+                    showresult = true
+                    showreverse = true
+                    showcount = true
+                    
+                }
+                .foregroundColor(Color.orange)
+                .cornerRadius(10)
+                
+                Button("Clear"){
+                    sequence = ""
+                    showresult = false
+                    showlength = false
+                    showreverse = false
+                    showcount = false
+                    
+                }
+                .foregroundColor(Color.red)
+                .cornerRadius(10)
+                
+            }
+            
+            if showresult{
+                Text(sequence.isEmpty ? "No DNA Sequence Entered": "DNA Sequence: \(sequence)")
+            }
+            
+            if showlength{
+                let sequence1 = sequence
+               let sequence_length =  sequence1.count
+               Text("The length of your DNA strand is: \(sequence_length)")
+                
+            }
+            
+            if showreverse{
+                let sequence2 = sequence
+                let sequence_reversed = String(sequence2.reversed())
+                Text("Your DNA strand reversed is: \(sequence_reversed)")
+            }
+            
+            if showcount{
+                let countlower = sequence.lowercased()
+                
+                let countA = countlower.count{ $0 == "a"}
+                let countT = countlower.count{ $0 == "t"}
+                let countC = countlower.count{ $0 == "c"}
+                let countG = countlower.count{ $0 == "g"}
+                
+                Text("A: \(countA)")
+                Text("T: \(countT)")
+                Text("C: \(countC)")
+                Text("G: \(countG)")
             }
         }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
         }
     }
 
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
-    }
-}
-
-fileprivate struct NavigationViewWrapper<Content: View>: View {
-    let content: () -> Content
-
-    var body: some View {
-#if os(macOS)
-        NavigationSplitView {
-            content()
-        } detail: {
-            Text("Select an item")
-        }
-#else
-        content()
-#endif
-    }
-}
-
-#Preview {
+#Preview{
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
